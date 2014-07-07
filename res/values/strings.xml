@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ClassicJunk</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="lblLabel">Make &amp; Model</string>
+    <string name="lblYearStart">Year Range From</string>
+    <string name="lblYearEnd">Year Range To</string>
+    <string name="lblZip">Zip Code</string>
+    <string name="submit">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="deleteAlert">Delete Alert</string>
+</resources>

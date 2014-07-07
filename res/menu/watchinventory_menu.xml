@@ -1,0 +1,33 @@
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+    <group>
+        <item
+            android:title="Sort by..."
+            android:enabled="false"
+            android:id="@+id/sortbytitlegroup">
+        </item>
+    </group>
+
+    <item
+        android:id="@+id/sortByDate"
+        android:title="Date">
+    </item>
+
+    <item
+        android:id="@+id/sortByArrived"
+        android:title="Time At Junk Yard">
+    </item>
+
+    <item
+        android:id="@+id/sortByDistance"
+        android:title="Distance">
+    </item>
+
+    <item
+        android:id="@+id/sortByYear"
+        android:title="Car Year">
+    </item>
+
+</menu>

@@ -1,0 +1,221 @@
+package org.sigmaprojects.ClassicJunk;
+
+import android.app.AlertDialog;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.text.Html;
+import android.util.Log;
+import android.view.InflateException;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.sigmaprojects.ClassicJunk.adapter.WatchInventoryAdapter;
+import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
+public class WatchInventoryFragment extends Fragment {
+
+    private static ArrayList<WatchInventory> watchInventories;
+    private static WatchInventoryAdapter watchinventoryAdapter;
+    private static final String TAG = "ClassicJunk";
+    private static View rootView;
+    private static ListView lv;
+
+    private static enum SortTyoes {
+        CREATED,
+        ARRIVED,
+        DISTANCE,
+        CARYEAR
+    };
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        if (rootView != null) {
+            ViewGroup parent = (ViewGroup) rootView.getParent();
+            if (parent != null) {
+                parent.removeView(rootView);
+            }
+        }
+        try {
+            rootView = inflater.inflate(R.layout.fragment_watchinventory, container, false);
+        } catch (InflateException e) {
+
+        }
+
+        lv = (ListView) rootView.findViewById(R.id.watchInventoryListView);
+        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
+                // We know the View is a TextView so we can cast it
+                RelativeLayout clickedView = (RelativeLayout) view;
+                //Toast.makeText(getActivity(), "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
+
+                WatchInventoryAdapter.ViewHolder tag =(WatchInventoryAdapter.ViewHolder)clickedView.getTag();
+
+                MainActivity a = (MainActivity)getActivity();
+                showDialog(a, tag.data);
+
+            }
+        });
+
+        setHasOptionsMenu(true);
+        return rootView;
+    }
+
+    private void showDialog(MainActivity activity, WatchInventory wi) {
+        final MainActivity a = activity;
+        /*
+        //final Context c = a.getBaseContext();
+        // Get our tools
+        AlertDialog dialog;
+        AlertDialog.Builder builder;
+        // The EditText to show your Text
+
+        //LayoutInflater inflater = (LayoutInflater) a.getSystemService(LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View layout = inflater.inflate(R.layout.locationinfo,
+                (ViewGroup) a.findViewById(R.id.showText));
+        EditText showText = (EditText) layout.findViewById(R.id.showText);
+        showText.setText("Some selectable text goes here.");
+        // Build the Dialog
+        builder = new AlertDialog.Builder(a);
+        builder.setView(layout);
+        dialog = builder.create();
+        // Some eye-candy
+        dialog.setTitle("Selectable text");
+        dialog.setCancelable(true);
+        dialog.show();
+        */
+
+        final String newline = System.getProperty("line.separator");
+        final String info =
+                "<strong>Address: </strong>" +
+                "<span>" + wi.inventory.location.address + "</span>" + "<br />" + "<br />" +
+                newline +
+                "<strong>Phone: </strong>" +
+                //"<a href='tel:'+loc.phonenumber + '">' + formatPhone(loc.phonenumber) + '</a>"
+                "<a href='tel:" + wi.inventory.location.phonenumber + "'>" +
+                formatPhone(wi.inventory.location.phonenumber) +
+                "</a>";
+
+        TextView showText = new TextView(a);
+        showText.setText( Html.fromHtml(info) );
+        showText.setTextIsSelectable(true);
+        showText.setTextSize(20);
+        showText.setPadding(10,10,10,10);
+        AlertDialog.Builder builder = new AlertDialog.Builder(a);
+        // Build the Dialog
+        builder.setView(showText)
+                .setTitle(wi.inventory.location.label)
+                .setCancelable(true)
+                .create();
+
+        AlertDialog alert = builder.create();
+        alert.show();
+    }
+
+    public static void updateListView(ArrayList<WatchInventory> watchinv) {
+        watchInventories = watchinv;
+        resetAdapter();
+    }
+
+    private String formatPhone(String text) {
+        String ph = text;
+        Log.v(TAG, "phone length is: " + ph.length());
+        if( ph.length() == 11 ) {
+            return ph.replaceFirst("(\\d{1})(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3-$4");
+        } else if( ph.length() == 10 ) {
+            //ph = ph.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+            return ph.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
+
+        };
+        Log.v(TAG, "shit didn't take");
+        return ph;
+    }
+
+    private static void resetAdapter() {
+        watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, watchInventories);
+        lv.setAdapter(watchinventoryAdapter);
+        watchinventoryAdapter.notifyDataSetChanged();
+    }
+
+    private static void updateSort(String type) {
+        final String _type = type;
+        Collections.sort(watchInventories, new Comparator<WatchInventory>() {
+            @Override
+            public int compare(WatchInventory item1, WatchInventory item2) {
+                switch( SortTyoes.valueOf(_type) ) {
+                    case CREATED: {
+                        return item2.created.compareTo(item1.created);
+                    }
+                    case ARRIVED: {
+                        return item2.inventory.arrived.compareTo(item1.inventory.arrived);
+                    }
+                    case DISTANCE: {
+                        return -item2.distance.compareTo(item1.distance);
+                    }
+                    case CARYEAR: {
+                        return -item2.inventory.caryear.compareTo(item1.inventory.caryear);
+                    }
+                    default: {
+                        return item2.created.compareTo(item1.created);
+                    }
+                }
+
+            }
+        });
+        resetAdapter();
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.watchinventory_menu, menu);
+        super.onCreateOptionsMenu(menu,inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.sortByDate:
+                updateSort("CREATED");
+                return true;
+
+            case R.id.sortByArrived:
+                updateSort("ARRIVED");
+                return true;
+
+            case R.id.sortByDistance:
+                updateSort("DISTANCE");
+                return true;
+
+            case R.id.sortByYear:
+                updateSort("CARYEAR");
+                return true;
+
+            default:
+                updateSort("CREATED");
+                return true;
+        }
+    }
+
+
+
+}
