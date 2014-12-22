@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ffffff"
     android:orientation="vertical"
-    android:background="#fffffcfd"
+
     android:id="@+id/edit_watch_fragment">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -11,6 +12,23 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:id="@+id/editwatch">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+        <TextView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="0.40"
+            android:textAlignment="gravity"
+            android:gravity="center"
+            android:inputType="text"
+            android:text="What care are you looking for?"
+            android:padding="15dp"
+            android:textSize="21dp"
+            />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
@@ -175,8 +193,6 @@
 
             </LinearLayout>
         </LinearLayout>
-
-
     </LinearLayout>
 
 
@@ -194,5 +210,17 @@
             android:ems="10"
             android:text="0"/>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/bg_accept"
+        android:paddingBottom="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+     />
+
+
 
 </RelativeLayout>

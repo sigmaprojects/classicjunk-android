@@ -1,8 +1,7 @@
 package org.sigmaprojects.ClassicJunk;
 
+import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -15,26 +14,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.sigmaprojects.ClassicJunk.adapter.WatchInventoryAdapter;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
 public class WatchInventoryFragment extends Fragment {
 
-    private static ArrayList<WatchInventory> watchInventories;
+    //private static ArrayList<WatchInventory> watchInventories = new ArrayList<WatchInventory>();
     private static WatchInventoryAdapter watchinventoryAdapter;
     private static final String TAG = "ClassicJunk";
     private static View rootView;
     private static ListView lv;
+
+    public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
 
     private static enum SortTyoes {
         CREATED,
@@ -42,6 +42,16 @@ public class WatchInventoryFragment extends Fragment {
         DISTANCE,
         CARYEAR
     };
+
+    public static WatchInventoryFragment newInstance() {
+        WatchInventoryFragment fragment = new WatchInventoryFragment();
+        //Bundle args = new Bundle();
+        //fragment.setArguments(args);
+        return fragment;
+    }
+
+    public WatchInventoryFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -56,7 +66,7 @@ public class WatchInventoryFragment extends Fragment {
         try {
             rootView = inflater.inflate(R.layout.fragment_watchinventory, container, false);
         } catch (InflateException e) {
-
+            Log.e(TAG,e.getMessage());
         }
 
         lv = (ListView) rootView.findViewById(R.id.watchInventoryListView);
@@ -74,6 +84,9 @@ public class WatchInventoryFragment extends Fragment {
 
             }
         });
+        Log.v(TAG,"onCreateView WatchInventoryFragment ran.......");
+
+        resetAdapter();
 
         setHasOptionsMenu(true);
         return rootView;
@@ -81,28 +94,6 @@ public class WatchInventoryFragment extends Fragment {
 
     private void showDialog(MainActivity activity, WatchInventory wi) {
         final MainActivity a = activity;
-        /*
-        //final Context c = a.getBaseContext();
-        // Get our tools
-        AlertDialog dialog;
-        AlertDialog.Builder builder;
-        // The EditText to show your Text
-
-        //LayoutInflater inflater = (LayoutInflater) a.getSystemService(LAYOUT_INFLATER_SERVICE);
-        LayoutInflater inflater = (LayoutInflater)getActivity().getBaseContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View layout = inflater.inflate(R.layout.locationinfo,
-                (ViewGroup) a.findViewById(R.id.showText));
-        EditText showText = (EditText) layout.findViewById(R.id.showText);
-        showText.setText("Some selectable text goes here.");
-        // Build the Dialog
-        builder = new AlertDialog.Builder(a);
-        builder.setView(layout);
-        dialog = builder.create();
-        // Some eye-candy
-        dialog.setTitle("Selectable text");
-        dialog.setCancelable(true);
-        dialog.show();
-        */
 
         final String newline = System.getProperty("line.separator");
         final String info =
@@ -131,10 +122,6 @@ public class WatchInventoryFragment extends Fragment {
         alert.show();
     }
 
-    public static void updateListView(ArrayList<WatchInventory> watchinv) {
-        watchInventories = watchinv;
-        resetAdapter();
-    }
 
     private String formatPhone(String text) {
         String ph = text;
@@ -151,17 +138,23 @@ public class WatchInventoryFragment extends Fragment {
     }
 
     private static void resetAdapter() {
-        watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, watchInventories);
+        watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, cjDataHolder.getWatchInventories());
         lv.setAdapter(watchinventoryAdapter);
         watchinventoryAdapter.notifyDataSetChanged();
+
+        // hide the No Inventory Found message
+        if( cjDataHolder.hasWatchInventories() ) {
+            TextView noInventory = (TextView) rootView.findViewById(R.id.no_inventory);
+            noInventory.setVisibility(RelativeLayout.GONE);
+        }
     }
 
     private static void updateSort(String type) {
         final String _type = type;
-        Collections.sort(watchInventories, new Comparator<WatchInventory>() {
+        Collections.sort(cjDataHolder.getWatchInventories(), new Comparator<WatchInventory>() {
             @Override
             public int compare(WatchInventory item1, WatchInventory item2) {
-                switch( SortTyoes.valueOf(_type) ) {
+                switch (SortTyoes.valueOf(_type)) {
                     case CREATED: {
                         return item2.created.compareTo(item1.created);
                     }
@@ -216,6 +209,20 @@ public class WatchInventoryFragment extends Fragment {
         }
     }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
 
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 }

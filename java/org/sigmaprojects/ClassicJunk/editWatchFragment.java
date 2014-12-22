@@ -15,6 +15,8 @@ import android.widget.LinearLayout;
 
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 
+import java.lang.reflect.Field;
+
 public class editWatchFragment extends Fragment {
 
     static final String TAG = "ClassicJunk";
@@ -26,8 +28,21 @@ public class editWatchFragment extends Fragment {
     private EditText txtYearEnd = null;
     private EditText txtZipCode = null;
 
+    public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
 
-	@Override
+    public static editWatchFragment newInstance() {
+        editWatchFragment fragment = new editWatchFragment();
+        //Bundle args = new Bundle();
+        //fragment.setArguments(args);
+        return fragment;
+    }
+
+    public editWatchFragment() {
+    }
+
+
+
+    @Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
@@ -46,7 +61,7 @@ public class editWatchFragment extends Fragment {
             txtYearEnd = (EditText)rootView.findViewById(R.id.txtYearEnd);
             txtZipCode = (EditText)rootView.findViewById(R.id.txtZipCode);
         } catch (InflateException e) {
-
+            Log.e(TAG,"InflateException: " + e.getMessage());
         }
 
         Button submitButton = (Button) rootView.findViewById(R.id.btnSubmit);
@@ -78,7 +93,11 @@ public class editWatchFragment extends Fragment {
             }
         });
 
-
+        if( cjDataHolder.hasEditWatch() ) {
+            resetForm(cjDataHolder.getEditWatch());
+        } else {
+            resetForm();
+        }
         if( MainActivity.hasLocation() ) {
             hideZipcode();
         }
@@ -128,6 +147,7 @@ public class editWatchFragment extends Fragment {
     }
 
     public static void resetForm() {
+        cjDataHolder.setEditWatch();
         EditText id = (EditText)rootView.findViewById(R.id.txtID);
         EditText label = (EditText)rootView.findViewById(R.id.txtLabel);
         EditText zip = (EditText)rootView.findViewById(R.id.txtZipCode);
@@ -163,6 +183,22 @@ public class editWatchFragment extends Fragment {
         LinearLayout zipLL = (LinearLayout)rootView.findViewById(R.id.watchlocationLayout);
         zipLL.setVisibility(LinearLayout.GONE);
         Log.v(TAG, "Hiding ZipCode container layout.");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        try {
+            Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
+            childFragmentManager.setAccessible(true);
+            childFragmentManager.set(this, null);
+
+        } catch (NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

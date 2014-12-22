@@ -1,18 +1,29 @@
 package org.sigmaprojects.ClassicJunk;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.FragmentTransaction;
-import android.content.Context;
-import android.content.Intent;
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.content.Intent;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
+import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.support.v4.widget.DrawerLayout;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
 
-import org.sigmaprojects.ClassicJunk.adapter.TabsPagerAdapter;
+
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.util.GCM;
@@ -20,19 +31,24 @@ import org.sigmaprojects.ClassicJunk.util.GPSTracker;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-public class MainActivity extends FragmentActivity implements
-		ActionBar.TabListener {
+
+public class MainActivity extends ActionBarActivity
+        implements NavigationDrawerFragment.NavigationDrawerCallbacks {
+
+    /**
+     * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
+     */
+    private NavigationDrawerFragment mNavigationDrawerFragment;
+
+    /**
+     * Used to store the last screen title. For use in {@link #restoreActionBar()}.
+     */
+    private CharSequence mTitle;
 
     private static final String TAG = "ClassicJunk";
 
-	private ViewPager viewPager;
-	private static TabsPagerAdapter mAdapter;
-	private ActionBar actionBar;
-	// Tab titles
-	private String[] tabs = { "New", "Alerts", "Notifications" };
-
-    //public final static apiService apiservice = new apiService();
     private static apiService apiservice = null;
 
     public static Float lat = Float.valueOf("0.00");
@@ -40,72 +56,145 @@ public class MainActivity extends FragmentActivity implements
 
     private static GCM gcm;
 
-    //static Context context;
+    public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
+
 
     @Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_main);
-        Context context = getApplicationContext();
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
 
-        if( gcm == null || !gcm.hasRegID() ) {
-            gcm = new GCM(this, context);
+        mNavigationDrawerFragment = (NavigationDrawerFragment)
+                getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
+        mTitle = getTitle();
+
+        // Set up the drawer.
+        mNavigationDrawerFragment.setUp(
+                R.id.navigation_drawer,
+                (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        //Context context = getApplicationContext();
+
+        if( gcm == null ) {
+            gcm = new GCM(this);
         }
+        verifyApiService();
 
-        List<Fragment> fragments = getFragments();
         setupLocation();
 
-    	actionBar = getActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-
-        mAdapter = new TabsPagerAdapter(getSupportFragmentManager(), fragments);
-        viewPager = (ViewPager)findViewById(R.id.pager);
-        viewPager.setOffscreenPageLimit(10);
-        viewPager.setAdapter(mAdapter);
-
-		// Adding Tabs
-		for (String tab_name : tabs) {
-			actionBar.addTab(actionBar.newTab().setText(tab_name).setTabListener(this));
-		}
-
-		viewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-
-			@Override
-			public void onPageSelected(int position) {
-				actionBar.setSelectedNavigationItem(position);
-			}
-
-			@Override
-			public void onPageScrolled(int arg0, float arg1, int arg2) { }
-
-			@Override
-			public void onPageScrollStateChanged(int arg0) { }
-		});
 
         Intent intent = getIntent();
         checkIntent(intent);
-	}
+
+    }
 
     @Override
     protected void onResume() {
         super.onResume();
-        //gcm.checkPlayServices(this);
+        gcm.checkPlayServices(this);
+        verifyApiService();
+
         Intent intent = getIntent();
         checkIntent(intent);
     }
 
+    @Override
+    public void onNavigationDrawerItemSelected(int position) {
+        // update the main content by replacing fragments
+        //FragmentManager fragmentManager = getSupportFragmentManager();
+
+        Fragment fragment;
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+
+        switch (position) {
+            case 0:
+                fragment = editWatchFragment.newInstance();
+                break;
+            case 1:
+                fragment = WatchListFragment.newInstance();
+                break;
+            case 2:
+                fragment = WatchInventoryFragment.newInstance();
+                break;
+            default:
+                //fragment = PlaceholderFragment.newInstance(position + 1);
+                fragment = editWatchFragment.newInstance();
+            break;
+        }
+        fragmentManager.beginTransaction()
+                .replace(R.id.container, fragment)
+                //.commit();
+                .commitAllowingStateLoss();
+        Log.e("TESTING","onNavigationDrawerItemSelected was clicked: " + position);
+    }
+
+
+    public void onSectionAttached(int number) {
+        Log.d("TESTING","onSectionAttached was clicked: " + number);
+        switch (number) {
+            case 1:
+                mTitle = getString(R.string.title_section1);
+                break;
+            case 2:
+                mTitle = getString(R.string.title_section2);
+                break;
+            case 3:
+                mTitle = getString(R.string.title_section3);
+                break;
+        }
+    }
+
+    public void restoreActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+        //actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(mTitle);
+
+        actionBar.setIcon(R.drawable.ic_launcher);
+        actionBar.setLogo(R.drawable.ic_launcher);
+        actionBar.setDisplayUseLogoEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(true);
+
+    }
+
 
     @Override
-	public void onTabReselected(Tab tab, FragmentTransaction ft) {}
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (!mNavigationDrawerFragment.isDrawerOpen()) {
+            // Only show items in the action bar relevant to this screen
+            // if the drawer is not showing. Otherwise, let the drawer
+            // decide what to show in the action bar.
+            getMenuInflater().inflate(R.menu.main, menu);
+            restoreActionBar();
+            return true;
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
 
-	@Override
-	public void onTabSelected(Tab tab, FragmentTransaction ft) {
-		viewPager.setCurrentItem(tab.getPosition());
-	}
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-	@Override
-	public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-	}
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.resync) {
+            apiservice.download(2);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void verifyApiService() {
+        if( apiservice == null ) {
+            apiservice = new apiService(this);
+            apiservice.download();
+        }
+    }
 
     private void checkIntent(Intent intent) {
         try{
@@ -114,34 +203,17 @@ public class MainActivity extends FragmentActivity implements
             if(action != null && action.equalsIgnoreCase("OPEN_TAB_2") ){
                 Log.v(TAG, "Notification intent");
                 //viewPager.setCurrentItem(2);
-                getAPIService().download(viewPager);
+                //onNavigationDrawerItemSelected(2);
+                apiservice.download(2);
             } else {
-                if( gcm == null || !gcm.hasRegID() ) {
-                    gcm = new GCM(this, this);
+                if( gcm == null ) {
+                    gcm = new GCM(this);
+                    Log.v(TAG,"checkIntent new GCM assigned.");
                 }
             }
         }catch(Exception e){
             Log.e(TAG, "Problem consuming action from intent", e);
         }
-    }
-
-    public void setAPIService(apiService api) {
-        if( apiservice == null ) {
-            apiservice = api;
-        }
-    }
-    public apiService getAPIService() {
-        return apiservice;
-    }
-
-
-    private List<Fragment> getFragments(){
-        List<Fragment> fList = new ArrayList<Fragment>();
-        fList.add( new editWatchFragment() );
-        fList.add( new WatchListFragment() );
-        fList.add( new WatchInventoryFragment() );
-        return fList;
-
     }
 
     private void setupLocation() {
@@ -164,18 +236,6 @@ public class MainActivity extends FragmentActivity implements
         return false;
     }
 
-    public void resetEditWatchFrag() {
-        editWatchFragment.resetForm();
-        viewPager.setCurrentItem(1);
-    }
-
-    public void resetEditWatchFrag(Watch w) {
-        editWatchFragment.resetForm(w);
-        viewPager.setCurrentItem(0);
-    }
-
-
-
     public void saveWatch(Watch w) {
         try {
             apiservice.saveWatch(w);
@@ -191,15 +251,6 @@ public class MainActivity extends FragmentActivity implements
             Log.v(TAG, "apiservice.deleteWatch(w) not ready yet (NPE).");
         }
     }
-
-    public static void updateWatchInventories(ArrayList<WatchInventory> watchInventories) {
-        WatchInventoryFragment.updateListView(watchInventories);
-    }
-
-    public static void updateWatches(ArrayList<Watch> watches) {
-        WatchListFragment.updateListView(watches);
-    }
-
 
 
 }

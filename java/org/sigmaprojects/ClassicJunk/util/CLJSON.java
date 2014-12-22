@@ -13,6 +13,8 @@ import com.google.gson.JsonParseException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.sigmaprojects.ClassicJunk.CJApp;
+import org.sigmaprojects.ClassicJunk.CJDataHolder;
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchReponse;
 
@@ -27,10 +29,9 @@ public class CLJSON {
 
     private static final String TAG = "CLJSON";
     private static String apiBaseURL = "http://api.classicjunk.sigmaprojects.org";
+    public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
 
-    public static ArrayList<Watch> getWatches(String regid) {
-        //Gson gson = new Gson();
-        //Gson gson = new GsonBuilder().setDateFormat("yyyy-mm-dd'T'HH:nn:ss").create();
+    public static ArrayList<Watch> getWatches() {
         GsonBuilder builder = new GsonBuilder();
 
         // Register an adapter to manage the date types as long values
@@ -44,7 +45,7 @@ public class CLJSON {
 
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("registration_id", regid);
+            jsonObject.put("device_id", CJApp.getDeviceUuid());
             jsonObject.put("format", "json");
         } catch (JSONException e) {
             e.printStackTrace();
@@ -63,8 +64,7 @@ public class CLJSON {
         return results;
     }
 
-    public static void deleteWatch(Watch w, String regid) {
-        //Gson gson = new Gson();
+    public static void deleteWatch(Watch w) {
         GsonBuilder builder = new GsonBuilder();
         // Register an adapter to manage the date types as long values
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -77,7 +77,7 @@ public class CLJSON {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("registration_id", regid);
+            jsonObject.put("device_id", CJApp.getDeviceUuid());
             jsonObject.put("format", "json");
             jsonObject.put("id", w.id);
         } catch (JSONException e) {
@@ -88,8 +88,7 @@ public class CLJSON {
         sendRequest("/watch/deleteWatch", json);
     }
 
-    public static WatchReponse saveWatch(Watch w, String regid) {
-        //Gson gson = new Gson();
+    public static WatchReponse saveWatch(Watch w) {
         GsonBuilder builder = new GsonBuilder();
         // Register an adapter to manage the date types as long values
         builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
@@ -102,7 +101,7 @@ public class CLJSON {
         JSONObject jsonObject = new JSONObject();
 
         try {
-            jsonObject.put("registration_id", regid);
+            jsonObject.put("device_id", CJApp.getDeviceUuid());
             jsonObject.put("format", "json");
             jsonObject.put("id", w.id);
             jsonObject.put("label", w.label);

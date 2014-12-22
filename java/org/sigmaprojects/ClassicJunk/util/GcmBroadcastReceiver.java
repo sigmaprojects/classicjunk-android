@@ -34,16 +34,13 @@ public class GcmBroadcastReceiver extends WakefulBroadcastReceiver {
             Log.v("GCMDEMO", "Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED failed");
         }
 
-
-    // Explicitly specify that GcmIntentService will handle the intent.
+        // Explicitly specify that GcmIntentService will handle the intent.
         ComponentName comp = new ComponentName(context.getPackageName(),
                 GcmIntentService.class.getName());
         // Start the service, keeping the device awake while it is launching.
         startWakefulService(context, (intent.setComponent(comp)));
-
         setResultCode(Activity.RESULT_OK);
 
-        //MainActivity activity = (MainActivity)context;
-        //activity.hasLocation();
+
     }
 }

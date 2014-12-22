@@ -1,7 +1,6 @@
 package org.sigmaprojects.ClassicJunk.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,7 +8,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import org.sigmaprojects.ClassicJunk.R;
-import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 
 import java.util.ArrayList;

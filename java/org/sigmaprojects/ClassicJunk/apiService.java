@@ -23,44 +23,33 @@ import java.util.List;
 public class apiService {
 
     static final String TAG = "ClassicJunk";
-    private String regid = "";
     private MainActivity activity;
 
-    public apiService(MainActivity a, String registrationId) {
-        regid = registrationId;
+    //private ArrayList<WatchInventory> watchinventories = new ArrayList<WatchInventory>();
+    //private ArrayList<Watch> watches = new ArrayList<Watch>();
+
+    public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
+
+    public apiService(MainActivity a) {
         activity = a;
     }
-
-
-
-    public void setRegid(String _regid) { regid = _regid; }
-    public String getRegid() {
-        //return "APA91bGq-nqQd8zR0kB5Oj_1q-IO4386VBjjL_uTEgOwKdnXcjk9LnRduYe1JunOpoSSkIoeUILMsqncK1LauA_YKqL1OZglEdqKBQDLYv22z6rgTJkd1yh95l9-8rTTQPL4KfAaxtZ4IBG_SyZsp591Up-DZUGlYA";
-        return regid;
-    }
-
-
-
-
 
 
     public void download() {
         BackgroundDownloadTask task = new BackgroundDownloadTask(activity);
         task.execute();
     }
-    public void download(ViewPager viewPager) {
-        BackgroundDownloadTask task = new BackgroundDownloadTask(activity,viewPager);
+    public void download(Integer position) {
+        BackgroundDownloadTask task = new BackgroundDownloadTask(activity,position);
         task.execute();
     }
 
     public void saveWatch(Watch w) {
-        w.registration_id = getRegid();
         BackgroundSaveWatchTask task = new BackgroundSaveWatchTask(w,activity);
         task.execute();
     }
 
     public void deleteWatch(Watch w) {
-        w.registration_id = getRegid();
         BackgroundDeleteWatchTask task = new BackgroundDeleteWatchTask(w,activity);
         task.execute();
     }
@@ -101,15 +90,15 @@ public class apiService {
             if( syncError == true ) {
                 alertDialog.show();
             } else {
-                download();
-                activity.resetEditWatchFrag();
+                download(1);
+                cjDataHolder.setEditWatch();
             }
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                CLJSON.deleteWatch(watch, getRegid());
+                CLJSON.deleteWatch(watch);
             } catch(Exception e) {
                 Log.e(TAG,"Delete error",e);
                 syncError = true;
@@ -166,8 +155,8 @@ public class apiService {
                     AlertDialog alertDialog = builder.create();
                     alertDialog.show();
                 } else {
-                    download();
-                    activity.resetEditWatchFrag();
+                    download(1);
+                    cjDataHolder.setEditWatch();
                 }
             }
         }
@@ -175,7 +164,7 @@ public class apiService {
         @Override
         protected List doInBackground(Void... params) {
             try {
-                WatchReponse response = CLJSON.saveWatch(watch, getRegid());
+                WatchReponse response = CLJSON.saveWatch(watch);
                 return response.errorsarray;
             } catch(Exception e) {
                 Log.e(TAG,"Save error",e);
@@ -193,6 +182,7 @@ public class apiService {
         private ArrayList<Watch> watches = new ArrayList<Watch>();
         private boolean syncError = false;
         private AlertDialog.Builder alertDialog;
+        private Integer position;
 
         public BackgroundDownloadTask(MainActivity activity) {
             progressDialog = new ProgressDialog( activity );
@@ -205,9 +195,9 @@ public class apiService {
                     });
         }
 
-        public BackgroundDownloadTask(MainActivity activity, ViewPager viewPager) {
-            viewPager.setCurrentItem(2);
-            progressDialog = new ProgressDialog( viewPager.getContext() );
+        public BackgroundDownloadTask(MainActivity activity, Integer pos) {
+            position = pos;
+            progressDialog = new ProgressDialog( activity );
         }
 
 
@@ -222,8 +212,15 @@ public class apiService {
             if( syncError == true ) {
                 alertDialog.show();
             } else {
-                MainActivity.updateWatchInventories(watchinventories);
-                MainActivity.updateWatches(watches);
+                cjDataHolder.setWatches(watches);
+                cjDataHolder.setWatchInventories(watchinventories);
+                if( position != null ) {
+                    try {
+                        activity.onNavigationDrawerItemSelected(position);
+                    } catch(Exception e) {
+                        Log.e(TAG,e.getMessage());
+                    }
+                }
             }
             if (progressDialog.isShowing()) {
                 progressDialog.dismiss();
@@ -233,7 +230,7 @@ public class apiService {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-                watches = CLJSON.getWatches(getRegid());
+                watches = CLJSON.getWatches();
                 Log.v(TAG, watches.toString());
                 watchinventories = new ArrayList<WatchInventory>();
 
@@ -247,8 +244,6 @@ public class apiService {
             return null;
         }
     }
-
-
 
 
 }
