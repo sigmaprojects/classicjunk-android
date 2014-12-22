@@ -48,7 +48,8 @@ public class CLJSON {
             jsonObject.put("device_id", CJApp.getDeviceUuid());
             jsonObject.put("format", "json");
         } catch (JSONException e) {
-            e.printStackTrace();
+            Log.v(TAG,"JSON error:",e);
+            //e.printStackTrace();
         }
         String json = jsonObject.toString();
         String data = sendRequest("/watch/getwatches", json);

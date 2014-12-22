@@ -1,13 +1,14 @@
-package org.sigmaprojects.ClassicJunk;
+package org.sigmaprojects.ClassicJunk.util;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
-import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.util.Log;
 
+import org.sigmaprojects.ClassicJunk.CJDataHolder;
+import org.sigmaprojects.ClassicJunk.MainActivity;
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.beans.WatchReponse;
@@ -187,10 +188,10 @@ public class apiService {
         public BackgroundDownloadTask(MainActivity activity) {
             progressDialog = new ProgressDialog( activity );
             alertDialog = new AlertDialog.Builder( activity )
-                .setTitle("Error Syncing")
-                .setMessage("Could not sync alerts")
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    .setTitle("Error Syncing")
+                    .setMessage("Could not sync alerts")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) { dialog.dismiss(); }
                     });
         }
@@ -212,8 +213,12 @@ public class apiService {
             if( syncError == true ) {
                 alertDialog.show();
             } else {
-                cjDataHolder.setWatches(watches);
-                cjDataHolder.setWatchInventories(watchinventories);
+                try {
+                    cjDataHolder.setWatches(watches);
+                    cjDataHolder.setWatchInventories(watchinventories);
+                } catch(Exception e) {
+                    Log.v(TAG,"Error setWatches & setWatchInventories:",e);
+                }
                 if( position != null ) {
                     try {
                         activity.onNavigationDrawerItemSelected(position);

@@ -1,37 +1,22 @@
 package org.sigmaprojects.ClassicJunk;
 
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
-import android.content.Context;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 
 
 import org.sigmaprojects.ClassicJunk.beans.Watch;
-import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.util.GCM;
 import org.sigmaprojects.ClassicJunk.util.GPSTracker;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import org.sigmaprojects.ClassicJunk.util.apiService;
 
 
 public class MainActivity extends ActionBarActivity

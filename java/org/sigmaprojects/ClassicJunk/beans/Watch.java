@@ -32,9 +32,6 @@ public class Watch {
     @SerializedName("zipcode")
     public Integer zipcode;
 
-    @SerializedName("registration_id")
-    public String registration_id;
-
     @SerializedName("created")
     public Date created;
 
@@ -48,7 +45,6 @@ public class Watch {
         Log.v(Tag, "lat: " + lat);
         Log.v(Tag, "lng: " + lng);
         Log.v(Tag, "zipcode: " + zipcode);
-        Log.v(Tag, "registration_id: " + registration_id);
     }
     /*
     public boolean validate() {

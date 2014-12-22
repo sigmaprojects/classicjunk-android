@@ -27,21 +27,17 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
 import org.sigmaprojects.ClassicJunk.CJApp;
 import org.sigmaprojects.ClassicJunk.CJDataHolder;
 import org.sigmaprojects.ClassicJunk.MainActivity;
-import org.sigmaprojects.ClassicJunk.apiService;
 
 import java.io.BufferedReader;
 import java.io.IOException;
