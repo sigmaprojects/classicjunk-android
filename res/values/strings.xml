@@ -23,4 +23,11 @@
     <string name="no_inventory_found">No notifications triggered yet.</string>
     <string name="no_watches_found">No alerts defined yet.</string>
 
+    <string name="search_car">Keyword</string>
+    <string name="search_years">Year</string>
+    <string name="search_year_start">Year From</string>
+    <string name="search_year_end">Year To</string>
+    <string name="search_button_label">Search Cars</string>
+    <string name="search_none_found">No results found.</string>
+
 </resources>

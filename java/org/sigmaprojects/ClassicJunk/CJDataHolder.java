@@ -1,5 +1,6 @@
 package org.sigmaprojects.ClassicJunk;
 
+import org.sigmaprojects.ClassicJunk.beans.Inventory;
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 
@@ -36,6 +37,25 @@ public class CJDataHolder {
     public String getDeviceId() { return deviceId;}
     public void setDeviceId(String id) {this.deviceId = id;}
 
+    // lat
+    private Float lat;
+    public Float getLat() { return lat;}
+    public void setLat(Float lat) {this.lat = lat;}
+
+    // lng
+    private Float lng;
+    public Float getLng() { return lng;}
+    public void setLng(Float lng) {this.lng = lng;}
+
+    public boolean hasLocation() {
+        return lat != null && lat != 0.00 && lng != null && lng != 0.00;
+    }
+
+    // array list of search inventories
+    private ArrayList<Inventory> searchinventories = new ArrayList<Inventory>();
+    public ArrayList<Inventory> getSearchInventories() {return searchinventories;}
+    public void setSearchInventories(ArrayList<Inventory> inventories) {this.searchinventories = inventories;}
+    public boolean hasSearchInventories() { return (searchinventories.size() > 0); }
 
     private static final CJDataHolder holder = new CJDataHolder();
     public static CJDataHolder getInstance() {return holder;}

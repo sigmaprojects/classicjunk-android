@@ -1,6 +1,5 @@
 package org.sigmaprojects.ClassicJunk;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,18 +17,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.sigmaprojects.ClassicJunk.adapter.WatchInventoryAdapter;
+import org.sigmaprojects.ClassicJunk.adapter.SearchInventoryAdapter;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
+import org.sigmaprojects.ClassicJunk.beans.Inventory;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class WatchInventoryFragment extends Fragment {
+public class SearchInventoryFragment extends Fragment {
 
     //private static ArrayList<WatchInventory> watchInventories = new ArrayList<WatchInventory>();
-    private static WatchInventoryAdapter watchinventoryAdapter;
+    private static SearchInventoryAdapter searchinventoryAdapter;
     private static final String TAG = "ClassicJunk";
     private static View rootView;
     private static ListView lv;
@@ -43,14 +42,14 @@ public class WatchInventoryFragment extends Fragment {
         CARYEAR
     };
 
-    public static WatchInventoryFragment newInstance() {
-        WatchInventoryFragment fragment = new WatchInventoryFragment();
+    public static SearchInventoryFragment newInstance() {
+        SearchInventoryFragment fragment = new SearchInventoryFragment();
         //Bundle args = new Bundle();
         //fragment.setArguments(args);
         return fragment;
     }
 
-    public WatchInventoryFragment() {
+    public SearchInventoryFragment() {
     }
 
     @Override
@@ -77,7 +76,7 @@ public class WatchInventoryFragment extends Fragment {
                 RelativeLayout clickedView = (RelativeLayout) view;
                 //Toast.makeText(getActivity(), "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
 
-                WatchInventoryAdapter.ViewHolder tag =(WatchInventoryAdapter.ViewHolder)clickedView.getTag();
+                SearchInventoryAdapter.ViewHolder tag =(SearchInventoryAdapter.ViewHolder)clickedView.getTag();
 
                 MainActivity a = (MainActivity)getActivity();
                 showDialog(a, tag.data);
@@ -92,18 +91,18 @@ public class WatchInventoryFragment extends Fragment {
         return rootView;
     }
 
-    private void showDialog(MainActivity activity, WatchInventory wi) {
+    private void showDialog(MainActivity activity, Inventory inventory) {
         final MainActivity a = activity;
 
         final String newline = System.getProperty("line.separator");
         final String info =
                 "<strong>Address: </strong>" +
-                "<span>" + wi.inventory.location.address + "</span>" + "<br />" + "<br />" +
+                "<span>" + inventory.location.address + "</span>" + "<br />" + "<br />" +
                 newline +
                 "<strong>Phone: </strong>" +
                 //"<a href='tel:'+loc.phonenumber + '">' + formatPhone(loc.phonenumber) + '</a>"
-                "<a href='tel:" + wi.inventory.location.phonenumber + "'>" +
-                formatPhone(wi.inventory.location.phonenumber) +
+                "<a href='tel:" + inventory.location.phonenumber + "'>" +
+                formatPhone(inventory.location.phonenumber) +
                 "</a>";
 
         TextView showText = new TextView(a);
@@ -114,7 +113,7 @@ public class WatchInventoryFragment extends Fragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(a);
         // Build the Dialog
         builder.setView(showText)
-                .setTitle(wi.inventory.location.label)
+                .setTitle(inventory.location.label)
                 .setCancelable(true)
                 .create();
 
@@ -138,15 +137,17 @@ public class WatchInventoryFragment extends Fragment {
     }
 
     private static void resetAdapter() {
-        watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, cjDataHolder.getWatchInventories());
-        lv.setAdapter(watchinventoryAdapter);
-        watchinventoryAdapter.notifyDataSetChanged();
+        searchinventoryAdapter = new SearchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, cjDataHolder.getSearchInventories());
+        lv.setAdapter(searchinventoryAdapter);
+        searchinventoryAdapter.notifyDataSetChanged();
 
+        TextView noInventory = (TextView) rootView.findViewById(R.id.no_inventory);
+        noInventory.setText( R.string.search_none_found );
         // hide the No Inventory Found message
-        if( cjDataHolder.hasWatchInventories() ) {
-            TextView noInventory = (TextView) rootView.findViewById(R.id.no_inventory);
-            noInventory.setText( R.string.no_inventory_found );
+        if( cjDataHolder.hasSearchInventories() ) {
             noInventory.setVisibility(RelativeLayout.GONE);
+        } else {
+            noInventory.setVisibility(RelativeLayout.VISIBLE);
         }
     }
 

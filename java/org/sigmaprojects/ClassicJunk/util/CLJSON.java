@@ -15,6 +15,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.sigmaprojects.ClassicJunk.CJApp;
 import org.sigmaprojects.ClassicJunk.CJDataHolder;
+import org.sigmaprojects.ClassicJunk.beans.Inventory;
+import org.sigmaprojects.ClassicJunk.beans.InventoryResponse;
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchReponse;
 
@@ -30,6 +32,51 @@ public class CLJSON {
     private static final String TAG = "CLJSON";
     private static String apiBaseURL = "http://api.classicjunk.sigmaprojects.org";
     public static CJDataHolder cjDataHolder = CJDataHolder.getInstance();
+
+    public static ArrayList<Inventory> searchInventory(
+            String car,
+            Number yearStart,
+            Number yearEnd,
+            Float lat,
+            Float lng
+    ) {
+        GsonBuilder builder = new GsonBuilder();
+
+        // Register an adapter to manage the date types as long values
+        builder.registerTypeAdapter(Date.class, new JsonDeserializer<Date>() {
+            public Date deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+                return new Date(json.getAsJsonPrimitive().getAsLong());
+            }
+        });
+
+        Gson gson = builder.create();
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("car", car);
+            jsonObject.put("yearStart", yearStart);
+            jsonObject.put("yearEnd", yearEnd);
+            jsonObject.put("lat", lat);
+            jsonObject.put("lng", lng);
+            jsonObject.put("format", "json");
+        } catch (JSONException e) {
+            Log.v(TAG,"JSON error:",e);
+            //e.printStackTrace();
+        }
+        String json = jsonObject.toString();
+
+        String data = sendRequest("/inventory/search", json);
+
+        InventoryResponse response;
+
+        response = gson.fromJson(data, InventoryResponse.class);
+
+        Log.v(TAG, response.toString());
+
+        ArrayList<Inventory> results = response.results;
+
+        return results;
+    }
 
     public static ArrayList<Watch> getWatches() {
         GsonBuilder builder = new GsonBuilder();

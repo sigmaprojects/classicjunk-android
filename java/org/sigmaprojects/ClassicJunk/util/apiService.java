@@ -9,6 +9,7 @@ import android.util.Log;
 
 import org.sigmaprojects.ClassicJunk.CJDataHolder;
 import org.sigmaprojects.ClassicJunk.MainActivity;
+import org.sigmaprojects.ClassicJunk.beans.Inventory;
 import org.sigmaprojects.ClassicJunk.beans.Watch;
 import org.sigmaprojects.ClassicJunk.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.beans.WatchReponse;
@@ -55,6 +56,14 @@ public class apiService {
         task.execute();
     }
 
+    public void searchInventory(
+            String car,
+            Number yearStart,
+            Number yearEnd
+    ) {
+        BackgroundSearchInventoryTask task = new BackgroundSearchInventoryTask(activity,car,yearStart,yearEnd);
+        task.execute();
+    }
 
 
     private class BackgroundDeleteWatchTask extends AsyncTask <Void, Void, Void> {
@@ -250,5 +259,75 @@ public class apiService {
         }
     }
 
+
+    private class BackgroundSearchInventoryTask extends AsyncTask <Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private ArrayList<Inventory> searchinventories = new ArrayList<Inventory>();
+        private boolean syncError = false;
+        private AlertDialog.Builder alertDialog;
+        private String car;
+        private Number yearStart;
+        private Number yearEnd;
+
+        public BackgroundSearchInventoryTask(
+                MainActivity activity,
+                String searchCar,
+                Number searchYearStart,
+                Number searchYearEnd
+        ) {
+            car = searchCar;
+            yearStart = searchYearStart;
+            yearEnd = searchYearEnd;
+            progressDialog = new ProgressDialog( activity );
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog.setMessage("Searching...");
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            if( syncError == true ) {
+                alertDialog.show();
+            } else {
+                try {
+                    cjDataHolder.setSearchInventories(searchinventories);
+                    activity.onNavigationDrawerItemSelected(4);
+                } catch(Exception e) {
+                    Log.v(TAG,"Error setSearchInventories:",e);
+                }
+            }
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            try {
+                searchinventories = CLJSON.searchInventory(
+                    car,
+                    yearStart,
+                    yearEnd,
+                    cjDataHolder.getLat(),
+                    cjDataHolder.getLng()
+                );
+                Log.v(TAG, searchinventories.toString());
+                /*
+                searchinventories = new ArrayList<Inventory>();
+                for (Inventory inventory : inventories) {
+                    watchinventories.addAll(watch.watchinventories);
+                }
+                */
+            } catch(Exception e) {
+                Log.e(TAG,"Search error",e);
+                syncError = true;
+            }
+            return null;
+        }
+    }
 
 }

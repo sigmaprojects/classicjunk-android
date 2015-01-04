@@ -34,7 +34,7 @@ public class MainActivity extends ActionBarActivity
 
     private static final String TAG = "ClassicJunk";
 
-    private static apiService apiservice = null;
+    public static apiService apiservice = null;
 
     public static Float lat = Float.valueOf("0.00");
     public static Float lng = Float.valueOf("0.00");
@@ -102,6 +102,13 @@ public class MainActivity extends ActionBarActivity
             case 2:
                 fragment = WatchInventoryFragment.newInstance();
                 break;
+            case 3:
+                searchInventoryDialogFragment dialog = searchInventoryDialogFragment.newInstance();
+                dialog.show(this.getFragmentManager(), "searchInventoryDialogFragment");
+                return;
+            case 4:
+                fragment = SearchInventoryFragment.newInstance();
+                break;
             default:
                 //fragment = PlaceholderFragment.newInstance(position + 1);
                 fragment = editWatchFragment.newInstance();
@@ -126,6 +133,12 @@ public class MainActivity extends ActionBarActivity
                 break;
             case 3:
                 mTitle = getString(R.string.title_section3);
+                break;
+            case 4:
+                mTitle = "Search";
+                break;
+            case 5:
+                mTitle = "Search";
                 break;
         }
     }
@@ -208,9 +221,12 @@ public class MainActivity extends ActionBarActivity
             Double _lng = gps.getLongitude();
             lat = Float.valueOf(""+_lat);
             lng = Float.valueOf(""+_lng);
+            cjDataHolder.setLat(Float.valueOf(""+_lat));
+            cjDataHolder.setLng(Float.valueOf(""+_lng));
             Log.v(TAG, "Latitude: " + lat + "    Lng: " + lng);
             gps.stopUsingGPS();
         } else {
+            mNavigationDrawerFragment.removeSearchNavigationItem();
             gps.showSettingsAlert();
         }
     }
