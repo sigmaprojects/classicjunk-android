@@ -90,7 +90,7 @@ public class MainActivity extends ActionBarActivity
 
         Fragment fragment;
         FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction ft = fragmentManager.beginTransaction();
+
 
         switch (position) {
             case 0:
@@ -114,8 +114,8 @@ public class MainActivity extends ActionBarActivity
                 fragment = editWatchFragment.newInstance();
             break;
         }
-        fragmentManager.beginTransaction()
-                .replace(R.id.container, fragment)
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(R.id.container, fragment)
                 //.commit();
                 .commitAllowingStateLoss();
         Log.e("TESTING","onNavigationDrawerItemSelected was clicked: " + position);

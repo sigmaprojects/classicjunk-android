@@ -42,12 +42,12 @@ public class SearchInventoryAdapter extends ArrayAdapter<Inventory> {
 
 
     public class ViewHolder {
-        private final TextView caryear;
-        private final TextView car;
-        private final TextView locationlabel;
-        private final TextView arrived;
-        public Inventory data = null;
-
+        public TextView caryear;
+        public TextView car;
+        public TextView locationlabel;
+        public TextView arrived;
+        public Inventory data;
+        /*
         public ViewHolder(Inventory inventory, View convertView) {
             this.caryear = (TextView) convertView.findViewById(R.id.caryear);
             this.car = (TextView) convertView.findViewById(R.id.car);
@@ -61,17 +61,19 @@ public class SearchInventoryAdapter extends ArrayAdapter<Inventory> {
 
             this.data = inventory;
         }
+        */
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (convertView == null) {
 
-            convertView = mInflater.inflate(R.layout.watchinventory_info, null);
+            convertView = mInflater.inflate(R.layout.watchinventory_info, parent, false);
 
-            holder = new ViewHolder(searchinventories.get(position), convertView);
+            //holder = new ViewHolder(searchinventories.get(position), convertView);
+            holder = new ViewHolder();
             assert convertView != null;
 
             convertView.setTag(holder);
@@ -79,6 +81,22 @@ public class SearchInventoryAdapter extends ArrayAdapter<Inventory> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        Inventory inventory = searchinventories.get(position);
+        if( inventory != null ) {
+            holder.caryear = (TextView) convertView.findViewById(R.id.caryear);
+            holder.car = (TextView) convertView.findViewById(R.id.car);
+            holder.locationlabel = (TextView) convertView.findViewById(R.id.locationlabel);
+            holder.arrived = (TextView) convertView.findViewById(R.id.arrived);
+
+            holder.caryear.setText("" + inventory.caryear.toString());
+            holder.car.setText("" + inventory.car);
+            holder.locationlabel.setText("" + inventory.location.label);
+            holder.arrived.setText("" + inventory.timeago.toString());
+
+            holder.data = inventory;
+        }
+        convertView.setTag(holder);
 
         return convertView;
 

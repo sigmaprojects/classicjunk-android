@@ -55,7 +55,7 @@ public class WatchListFragment extends Fragment {
 
                 public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
                     // We know the View is a TextView so we can cast it
-                    RelativeLayout clickedView = (RelativeLayout) view;
+                    View clickedView = view;
                     //Toast.makeText(getActivity(), "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
 
                     WatchAdapter.ViewHolder tag =(WatchAdapter.ViewHolder)clickedView.getTag();
@@ -81,7 +81,7 @@ public class WatchListFragment extends Fragment {
         // hide the No Watches Found message
         if( cjDataHolder.hasWatches() ) {
             TextView noWatches = (TextView) rootView.findViewById(R.id.no_watches);
-            noWatches.setVisibility(RelativeLayout.GONE);
+            noWatches.setVisibility(TextView.GONE);
         }
 
 		return rootView;

@@ -73,7 +73,8 @@ public class SearchInventoryFragment extends Fragment {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
                 // We know the View is a TextView so we can cast it
-                RelativeLayout clickedView = (RelativeLayout) view;
+                //RelativeLayout clickedView = (RelativeLayout) view;
+                View clickedView = view;
                 //Toast.makeText(getActivity(), "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
 
                 SearchInventoryAdapter.ViewHolder tag =(SearchInventoryAdapter.ViewHolder)clickedView.getTag();
@@ -145,9 +146,9 @@ public class SearchInventoryFragment extends Fragment {
         noInventory.setText( R.string.search_none_found );
         // hide the No Inventory Found message
         if( cjDataHolder.hasSearchInventories() ) {
-            noInventory.setVisibility(RelativeLayout.GONE);
+            noInventory.setVisibility(TextView.GONE);
         } else {
-            noInventory.setVisibility(RelativeLayout.VISIBLE);
+            noInventory.setVisibility(TextView.VISIBLE);
         }
     }
 

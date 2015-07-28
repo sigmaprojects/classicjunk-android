@@ -33,11 +33,11 @@ public class WatchAdapter extends ArrayAdapter<Watch> {
 
 
     public class ViewHolder {
-        private final TextView label;
-        private final TextView year_start;
-        private final TextView year_end;
+        private TextView label;
+        private TextView year_start;
+        private TextView year_end;
         public Watch data = null;
-
+        /*
         public ViewHolder(Watch watch, View convertView) {
             this.year_start = (TextView) convertView.findViewById(R.id.year_start);
             this.year_end = (TextView) convertView.findViewById(R.id.year_end);
@@ -48,19 +48,19 @@ public class WatchAdapter extends ArrayAdapter<Watch> {
             this.label.setText(watch.label);
 
             this.data = watch;
-
         }
+        */
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (convertView == null) {
 
-            convertView = mInflater.inflate(R.layout.watch_info, null);
+            convertView = mInflater.inflate(R.layout.watch_info, parent, false);
 
-            holder = new ViewHolder(watches.get(position), convertView);
+            holder = new ViewHolder();
             assert convertView != null;
 
             convertView.setTag(holder);
@@ -68,6 +68,20 @@ public class WatchAdapter extends ArrayAdapter<Watch> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        Watch watch = watches.get(position);
+        if( watch != null ) {
+            holder.year_start = (TextView) convertView.findViewById(R.id.year_start);
+            holder.year_end = (TextView) convertView.findViewById(R.id.year_end);
+            holder.label = (TextView) convertView.findViewById(R.id.label);
+
+            holder.year_start.setText(""+watch.year_start.toString());
+            holder.year_end.setText(""+watch.year_end.toString());
+            holder.label.setText(watch.label);
+
+            holder.data = watch;
+        }
+        convertView.setTag(holder);
 
         return convertView;
 

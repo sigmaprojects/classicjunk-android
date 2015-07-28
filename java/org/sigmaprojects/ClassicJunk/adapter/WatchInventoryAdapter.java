@@ -32,11 +32,12 @@ public class WatchInventoryAdapter extends ArrayAdapter<WatchInventory> {
 
 
     public class ViewHolder {
-        private final TextView caryear;
-        private final TextView car;
-        private final TextView locationlabel;
-        private final TextView arrived;
+        public TextView caryear;
+        public TextView car;
+        public TextView locationlabel;
+        public TextView arrived;
         public WatchInventory data = null;
+        /*
 
         public ViewHolder(WatchInventory watchinventory, View convertView) {
             this.caryear = (TextView) convertView.findViewById(R.id.caryear);
@@ -51,17 +52,18 @@ public class WatchInventoryAdapter extends ArrayAdapter<WatchInventory> {
 
             this.data = watchinventory;
         }
+        */
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        ViewHolder holder;
 
         if (convertView == null) {
 
-            convertView = mInflater.inflate(R.layout.watchinventory_info, null);
+            convertView = mInflater.inflate(R.layout.watchinventory_info, parent, false);
 
-            holder = new ViewHolder(watchinventories.get(position), convertView);
+            holder = new ViewHolder();
             assert convertView != null;
 
             convertView.setTag(holder);
@@ -69,6 +71,22 @@ public class WatchInventoryAdapter extends ArrayAdapter<WatchInventory> {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+
+        WatchInventory wi = watchinventories.get(position);
+        if( wi != null ) {
+            holder.caryear = (TextView) convertView.findViewById(R.id.caryear);
+            holder.car = (TextView) convertView.findViewById(R.id.car);
+            holder.locationlabel = (TextView) convertView.findViewById(R.id.locationlabel);
+            holder.arrived = (TextView) convertView.findViewById(R.id.arrived);
+
+            holder.caryear.setText("" + wi.inventory.caryear.toString());
+            holder.car.setText("" + wi.inventory.car);
+            holder.locationlabel.setText("" + wi.inventory.location.label);
+            holder.arrived.setText("" + wi.inventory.timeago.toString());
+
+            holder.data = wi;
+        }
+        convertView.setTag(holder);
 
         return convertView;
 
