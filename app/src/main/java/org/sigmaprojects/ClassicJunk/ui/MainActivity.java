@@ -76,6 +76,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         intentFilter.addAction(SHOW_SEARCH_RESULTS);
         LocalBroadcastManager.getInstance(this).registerReceiver(mMessageReceiver, intentFilter);
 
+        Intent intent = getIntent();
+        checkIntent(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         setupLocation();
 
         if( gcm == null ) {
@@ -89,9 +96,6 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             public void finished(Boolean success) {
             }
         });
-
-        Intent intent = getIntent();
-        checkIntent(intent);
     }
 
     @Override

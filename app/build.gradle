@@ -5,15 +5,19 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "org.sigmaprojects.ClassicJunk2"
+        applicationId "org.sigmaprojects.ClassicJunk"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 1
-        versionName "1.0"
+        versionCode 23
+        versionName "23"
     }
     buildTypes {
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -22,10 +26,12 @@ android {
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.2.1'
-    //compile 'com.google.code.gson:gson:2.3.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'
+    compile 'com.google.code.gson:gson:2.6.1'
+    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta4'
+    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta4'
     //compile 'com.google.android.gms:play-services:4.2.42'
     compile 'com.google.android.gms:play-services:7.5.0'
     compile 'joda-time:joda-time:2.8.1'
+    compile 'com.squareup.okhttp3:okhttp:3.1.2'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

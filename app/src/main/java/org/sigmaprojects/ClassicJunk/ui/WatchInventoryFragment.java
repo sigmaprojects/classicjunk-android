@@ -1,10 +1,13 @@
 package org.sigmaprojects.ClassicJunk.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Html;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -36,7 +39,10 @@ public class WatchInventoryFragment extends Fragment {
 
     private static CJDataHolder cjDataHolder;
 
-    private static enum SortTypes {
+    private int lastClickedPosition = -1;
+
+
+    private enum SortTypes {
         CREATED,
         ARRIVED,
         DISTANCE,
@@ -76,18 +82,17 @@ public class WatchInventoryFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             public void onItemClick(AdapterView<?> parentAdapter, View view, int position, long id) {
-                // We know the View is a TextView so we can cast it
-                //RelativeLayout clickedView = (RelativeLayout) view;
-                View clickedView = view;
-                //Toast.makeText(getActivity(), "Item with id [" + id + "] - Position [" + position + "] - Planet [" + clickedView.getText() + "]", Toast.LENGTH_SHORT).show();
 
-                WatchInventoryAdapter.ViewHolder tag =(WatchInventoryAdapter.ViewHolder)clickedView.getTag();
+                lastClickedPosition = position;
+
+                WatchInventoryAdapter.ViewHolder tag = (WatchInventoryAdapter.ViewHolder) view.getTag();
 
                 showDialog(tag.data);
 
             }
         });
-        Log.v(TAG,"onCreateView WatchInventoryFragment ran.......");
+
+        //Log.v(TAG, "onCreateView WatchInventoryFragment ran.......");
 
         resetAdapter();
 
@@ -95,50 +100,21 @@ public class WatchInventoryFragment extends Fragment {
         return rootView;
     }
 
+
     private void showDialog(WatchInventory wi) {
+        Intent intent = new Intent(getActivity(), InventoryInfo.class);
 
-        final String newline = System.getProperty("line.separator");
-        final String info =
-                "<strong>Address: </strong>" +
-                "<span>" + wi.getInventory().getLocation().getAddress() + "</span>" + "<br />" + "<br />" +
-                newline +
-                "<strong>Phone: </strong>" +
-                //"<a href='tel:'+loc.phonenumber + '">' + formatPhone(loc.phonenumber) + '</a>"
-                "<a href='tel:" + wi.getInventory().getLocation().getphonenumber() + "'>" +
-                formatPhone(wi.getInventory().getLocation().getphonenumber()) +
-                "</a>";
+        Bundle args = new Bundle();
+        args.putParcelable(InventoryInfo.ARG_INVENTORY, wi.getInventory());
+        args.putInt(InventoryInfo.ARG_POSITION, lastClickedPosition);
+        intent.putExtras(args);
 
-        TextView showText = new TextView(getActivity());
-        showText.setText( Html.fromHtml(info) );
-        showText.setTextIsSelectable(true);
-        showText.setTextSize(20);
-        showText.setPadding(10, 10, 10, 10);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        // Build the Dialog
-        builder.setView(showText)
-                .setTitle(wi.getInventory().getLocation().getLabel())
-                .setCancelable(true)
-                .create();
-
-        AlertDialog alert = builder.create();
-        alert.show();
+        startActivity(intent);
     }
 
-
-    private String formatPhone(String text) {
-        Log.v(TAG, "phone length is: " + text.length());
-        if( text.length() == 11 ) {
-            return text.replaceFirst("(\\d)(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3-$4");
-        } else if( text.length() == 10 ) {
-            //ph = ph.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
-            return text.replaceFirst("(\\d{3})(\\d{3})(\\d+)", "$1-$2-$3");
-
-        }
-        Log.v(TAG, "shit didn't take");
-        return text;
-    }
 
     private void resetAdapter() {
+        lastClickedPosition = -1;
         WatchInventoryAdapter watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, cjDataHolder.getWatchInventories());
         lv.setAdapter(watchinventoryAdapter);
         watchinventoryAdapter.notifyDataSetChanged();
@@ -154,7 +130,7 @@ public class WatchInventoryFragment extends Fragment {
 
     private void updateSort(String type) {
         final String _type = type;
-        Log.v(TAG, "watch inventory size: " + cjDataHolder.getWatchInventories().size());
+        //Log.v(TAG, "watch inventory size: " + cjDataHolder.getWatchInventories().size());
         Collections.sort(cjDataHolder.getWatchInventories(), new Comparator<WatchInventory>() {
             @Override
             public int compare(WatchInventory item1, WatchInventory item2) {
@@ -214,6 +190,31 @@ public class WatchInventoryFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        //Log.v(TAG, "onResume");
+
+        try {
+            LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        } catch(Exception e) {}
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(InventoryInfo.INVENTORY_INFO_SWIPE_NEXT);
+        intentFilter.addAction(InventoryInfo.INVENTORY_INFO_SWIPE_PREVIOUS);
+
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver, intentFilter);
+
+    }
+
+    @Override
+    public void onStop() {
+        //Log.v(TAG, "onStop");
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        super.onPause();
+    }
+
+
+    @Override
     public void onDetach() {
         super.onDetach();
 
@@ -231,6 +232,36 @@ public class WatchInventoryFragment extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         ((MainActivity) activity).onSectionAttached(getArguments().getInt(ARG_SECTION_NUMBER));
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            switch(intent.getAction()) {
+                case InventoryInfo.INVENTORY_INFO_SWIPE_NEXT:
+                    clickNextListViewItem(1);
+                    break;
+                case InventoryInfo.INVENTORY_INFO_SWIPE_PREVIOUS:
+                    clickNextListViewItem(-1);
+                    break;
+            }
+        }
+    };
+
+    private void clickNextListViewItem(int plusIndex) {
+        int clickPosition = lastClickedPosition+plusIndex;
+
+        try {
+            lv.performItemClick(
+                    lv.getAdapter().getView(clickPosition, null, null),
+                    clickPosition,
+                    lv.getAdapter().getItemId(clickPosition)
+            );
+        } catch (ArrayIndexOutOfBoundsException oob) {
+            // dont care
+        } catch (Exception e) {
+            Log.e(TAG, "error triggering onclick", e);
+        }
     }
 
 }

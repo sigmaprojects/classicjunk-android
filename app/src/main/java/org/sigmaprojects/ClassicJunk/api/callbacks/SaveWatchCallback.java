@@ -11,6 +11,7 @@ import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -29,7 +30,7 @@ public class SaveWatchCallback implements Callback<WatchResponse> {
     }
 
     @Override
-    public void onResponse(Response<WatchResponse> response) {
+    public void onResponse(Call<WatchResponse> call, Response<WatchResponse> response) {
         WatchResponse b = response.body();
         //Log.v(TAG, "onResponse completed for save watch" + " code: " + b.getCode() + " status: " + b.getStatus() + " errors: " + b.getErrorsarray());
         /*
@@ -79,7 +80,7 @@ public class SaveWatchCallback implements Callback<WatchResponse> {
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<WatchResponse> call, Throwable t) {
         Log.e(TAG, "failure", t);
         apiCallComplete.finished(false);
     }

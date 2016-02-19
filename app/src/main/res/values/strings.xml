@@ -31,6 +31,7 @@
     <string name="section_title_3">Notifications</string>
     <string name="section_title_4">Search</string>
     <string name="section_title_5">Search Results</string>
+    <string name="title_activity_inventory_info">InventoryInfo</string>
 
 
 </resources>

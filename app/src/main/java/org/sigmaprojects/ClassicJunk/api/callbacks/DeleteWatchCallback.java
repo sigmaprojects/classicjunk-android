@@ -7,8 +7,10 @@ import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 
 /**
  * Created by don on 2/15/2016.
@@ -25,16 +27,15 @@ public class DeleteWatchCallback implements Callback<WatchResponse> {
     }
 
     @Override
-    public void onResponse(Response<WatchResponse> response) {
+    public void onResponse(Call<WatchResponse> call, Response<WatchResponse> response) {
         //WatchResponse b = response.body();
         //Log.v(TAG, "onResponse completed for save watch" + " code: " + b.getCode() + " status: " + b.getStatus() + " errors: " + b.getErrorsarray());
-        /*
-        Log.v(TAG, "raw: " + response.raw().toString() );
-        Log.v(TAG, "raw 2: " + response.raw().message());
-        Log.v(TAG, "onResponse completed for save watch" + " code: " + b.getcode());
-        Log.v(TAG, " status: " + b.getstatus() );
-        Log.v(TAG, " errors: " + b.geterrorsarray());
-        */
+        //Log.v(TAG, "raw: " + response.raw().toString() );
+        //Log.v(TAG, "raw 2: " + response.raw().message());
+        //Log.v(TAG, "onResponse completed for save watch" + " code: " + b.getcode());
+        //Log.v(TAG, " status: " + b.getstatus() );
+        //Log.v(TAG, " errors: " + b.geterrorsarray());
+
 
         ClassicJunkService.getInstance().download(new APICallComplete() {
             @Override
@@ -42,11 +43,11 @@ public class DeleteWatchCallback implements Callback<WatchResponse> {
         });
 
         apiCallComplete.finished(true);
-
     }
 
+
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<WatchResponse> call, Throwable t) {
         Log.e(TAG, "failure", t);
         apiCallComplete.finished(false);
     }

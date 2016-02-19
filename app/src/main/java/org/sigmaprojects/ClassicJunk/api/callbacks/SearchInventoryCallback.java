@@ -12,6 +12,7 @@ import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
@@ -30,7 +31,7 @@ public class SearchInventoryCallback implements Callback<InventoryResponse> {
     }
 
     @Override
-    public void onResponse(Response<InventoryResponse> response) {
+    public void onResponse(Call<InventoryResponse> call, Response<InventoryResponse> response) {
         InventoryResponse b = response.body();
         Log.v(TAG, "onResponse completed for search inventory" + " code: " + b.getCode() + " status: " + b.getStatus() + " errors: " + b.getErrorsarray());
 
@@ -43,7 +44,7 @@ public class SearchInventoryCallback implements Callback<InventoryResponse> {
     }
 
     @Override
-    public void onFailure(Throwable t) {
+    public void onFailure(Call<InventoryResponse> call, Throwable t) {
         Log.e(TAG, "failure", t);
         apiCallComplete.finished(false);
     }

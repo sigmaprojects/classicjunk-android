@@ -20,6 +20,7 @@ public class Inventory implements Parcelable {
     private DateTime created;
     private String timeago;
     private Location location;
+    private String imageurl;
 
     public String getId() {
         return id;
@@ -77,6 +78,14 @@ public class Inventory implements Parcelable {
         this.timeago = timeago;
     }
 
+    public String getImageurl() {
+        return imageurl;
+    }
+
+    public void setImageurl(String imageurl) {
+        this.imageurl = imageurl;
+    }
+
     public Location getLocation() {
         return location;
     }
@@ -95,6 +104,7 @@ public class Inventory implements Parcelable {
         long tmpCreated = in.readLong();
         created = tmpCreated != -1 ? new DateTime(tmpCreated) : null;
         timeago = in.readString();
+        imageurl = in.readString();
         location = (Location) in.readValue(Location.class.getClassLoader());
     }
 
@@ -117,6 +127,7 @@ public class Inventory implements Parcelable {
         dest.writeString(notes);
         dest.writeLong(created != null ? created.getMillis() : -1L);
         dest.writeString(timeago);
+        dest.writeString(imageurl);
         dest.writeValue(location);
     }
 
