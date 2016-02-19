@@ -4,9 +4,6 @@ import android.util.Log;
 
 import org.sigmaprojects.ClassicJunk.api.beans.Inventory;
 import org.sigmaprojects.ClassicJunk.api.beans.InventoryResponse;
-import org.sigmaprojects.ClassicJunk.api.beans.Watch;
-import org.sigmaprojects.ClassicJunk.api.beans.WatchInventory;
-import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 

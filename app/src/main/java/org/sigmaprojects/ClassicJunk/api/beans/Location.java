@@ -4,8 +4,6 @@ package org.sigmaprojects.ClassicJunk.api.beans;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.google.gson.annotations.SerializedName;
-
 
 /**
  * Created by don on 2/15/2016.

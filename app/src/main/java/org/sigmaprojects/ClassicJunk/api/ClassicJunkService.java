@@ -8,7 +8,6 @@ import com.google.gson.GsonBuilder;
 import org.joda.time.DateTime;
 import org.sigmaprojects.ClassicJunk.api.beans.InventoryResponse;
 import org.sigmaprojects.ClassicJunk.api.beans.Watch;
-import org.sigmaprojects.ClassicJunk.api.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 import org.sigmaprojects.ClassicJunk.api.callbacks.DeleteWatchCallback;
 import org.sigmaprojects.ClassicJunk.api.callbacks.GetWatchesCallback;
@@ -18,11 +17,7 @@ import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.api.interfaces.ClassicJunkAPI;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
-import java.util.ArrayList;
-
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 

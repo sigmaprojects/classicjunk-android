@@ -8,12 +8,10 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonParseException;
 
 import org.joda.time.DateTime;
-import org.joda.time.format.ISODateTimeFormat;
 import org.sigmaprojects.ClassicJunk.api.beans.InventoryResponse;
 import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 

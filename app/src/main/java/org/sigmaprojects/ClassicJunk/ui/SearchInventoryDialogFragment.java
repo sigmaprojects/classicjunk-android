@@ -2,23 +2,16 @@ package org.sigmaprojects.ClassicJunk.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-//import android.app.Dialog;
-//import android.app.DialogFragment;
 import android.app.Dialog;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -30,6 +23,9 @@ import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.util.Utils;
 
 import java.lang.reflect.Field;
+
+//import android.app.Dialog;
+//import android.app.DialogFragment;
 
 
 /**

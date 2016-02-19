@@ -1,27 +1,22 @@
 package org.sigmaprojects.ClassicJunk.ui;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.LocalBroadcastManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.ActionBar;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.support.v4.widget.DrawerLayout;
 
-import org.joda.time.DateTime;
 import org.sigmaprojects.ClassicJunk.R;
 import org.sigmaprojects.ClassicJunk.api.ClassicJunkService;
 import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
@@ -29,10 +24,6 @@ import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 import org.sigmaprojects.ClassicJunk.util.GCM;
 import org.sigmaprojects.ClassicJunk.util.GPSTracker;
 import org.sigmaprojects.ClassicJunk.util.Utils;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Date;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerFragment.NavigationDrawerCallbacks {

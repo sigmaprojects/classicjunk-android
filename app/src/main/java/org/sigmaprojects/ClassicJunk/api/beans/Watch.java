@@ -7,7 +7,6 @@ import android.util.Log;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by don on 2/15/2016.

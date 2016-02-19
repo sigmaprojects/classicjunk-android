@@ -1,7 +1,6 @@
 package org.sigmaprojects.ClassicJunk.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -11,7 +10,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
-import android.text.Html;
 import android.util.Log;
 import android.view.InflateException;
 import android.view.LayoutInflater;
@@ -90,7 +88,7 @@ public class SearchInventoryFragment extends Fragment {
 
                 lastClickedPosition = position;
 
-                SearchInventoryAdapter.ViewHolder tag =(SearchInventoryAdapter.ViewHolder)clickedView.getTag();
+                SearchInventoryAdapter.ViewHolder tag = (SearchInventoryAdapter.ViewHolder) clickedView.getTag();
 
                 showDialog(tag.data);
 

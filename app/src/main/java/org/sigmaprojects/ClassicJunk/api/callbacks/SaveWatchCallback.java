@@ -2,14 +2,9 @@ package org.sigmaprojects.ClassicJunk.api.callbacks;
 
 import android.util.Log;
 
-import org.sigmaprojects.ClassicJunk.api.ClassicJunkService;
-import org.sigmaprojects.ClassicJunk.api.beans.Watch;
-import org.sigmaprojects.ClassicJunk.api.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
-
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Callback;

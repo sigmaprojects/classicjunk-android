@@ -1,15 +1,11 @@
 package org.sigmaprojects.ClassicJunk.api.callbacks;
 
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import org.sigmaprojects.ClassicJunk.App;
 import org.sigmaprojects.ClassicJunk.api.beans.Watch;
 import org.sigmaprojects.ClassicJunk.api.beans.WatchInventory;
 import org.sigmaprojects.ClassicJunk.api.beans.WatchResponse;
 import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
-import org.sigmaprojects.ClassicJunk.ui.MainActivity;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
 import java.util.ArrayList;
