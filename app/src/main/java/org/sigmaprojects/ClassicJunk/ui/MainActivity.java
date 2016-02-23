@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
     public static final String FINISHED_SYNCING = "org.sigmaprojects.ClassicJunk.finished_syncing";
     public static final String RECEIVED_NOTIFICATION = "OPEN_TAB_2";
 
+
+
     private final String TAG = MainActivity.class.getName();
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private CharSequence mTitle;
@@ -104,23 +106,23 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
 
         switch (position) {
             case 0:
-                fragment = EditWatchFragment.newInstance(position);
-                break;
-            case 1:
                 fragment = WatchListFragment.newInstance(position);
                 break;
-            case 2:
+            case 1:
                 reSync();
                 break;
-            case 3:
+            case 2:
                 SearchInventoryDialogFragment dialog = SearchInventoryDialogFragment.newInstance(position);
                 dialog.show(this.getSupportFragmentManager(), "searchInventoryDialogFragment");
                 return;
-            case 4:
+            case 3:
                 fragment = SearchInventoryFragment.newInstance(position);
                 break;
+            case 4:
+                fragment = WatchInventoryFragment.newInstance(1);
+                break;
             case 5:
-                fragment = WatchInventoryFragment.newInstance(2);
+                fragment = EditWatchFragment.newInstance(position);
                 break;
             default:
                 fragment = SearchInventoryFragment.newInstance(position);
@@ -138,19 +140,19 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         Log.v(TAG, "onSectionAttached was clicked: " + number);
         switch (number) {
             case 0:
-                mTitle = getString(R.string.section_title_1);
-                break;
-            case 1:
                 mTitle = getString(R.string.section_title_2);
                 break;
-            case 2:
+            case 1:
                 mTitle = getString(R.string.section_title_3);
                 break;
-            case 3:
+            case 2:
                 mTitle = getString(R.string.section_title_4);
                 break;
-            case 4:
+            case 3:
                 mTitle = getString(R.string.section_title_5);
+                break;
+            case 4:
+                mTitle = getString(R.string.section_title_1);
                 break;
             default:
                 mTitle = getString(R.string.app_name);;
@@ -199,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         ClassicJunkService.getInstance().download(new APICallComplete() {
             @Override
             public void finished(Boolean success) {
-                onNavigationDrawerItemSelected(5);
+                onNavigationDrawerItemSelected(4);
                 try {
                     progressDialog.dismiss();
                 } catch(Exception e) {}
@@ -239,13 +241,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
             Log.d(TAG, "Got: " + intent.getAction());
             switch(intent.getAction()) {
                 case FINISHED_SYNCING:
-                    onNavigationDrawerItemSelected(1);
+                    onNavigationDrawerItemSelected(0);
                     break;
                 case RECEIVED_NOTIFICATION:
-                    onNavigationDrawerItemSelected(2);
+                    onNavigationDrawerItemSelected(1);
                     break;
                 case SHOW_SEARCH_RESULTS:
-                    onNavigationDrawerItemSelected(4);
+                    onNavigationDrawerItemSelected(3);
                     break;
             }
         }

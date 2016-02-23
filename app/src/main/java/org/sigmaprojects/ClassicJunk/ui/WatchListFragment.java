@@ -2,6 +2,7 @@ package org.sigmaprojects.ClassicJunk.ui;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.InflateException;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -70,7 +72,7 @@ public class WatchListFragment extends Fragment {
                     MainActivity a = (MainActivity)getActivity();
                     //a.resetEditWatchFrag( tag.data );
                     cjDataHolder.setEditWatch(tag.data);
-                    a.onNavigationDrawerItemSelected(0);
+                    a.onNavigationDrawerItemSelected(5);
 
                 }
             });
@@ -90,6 +92,15 @@ public class WatchListFragment extends Fragment {
             TextView noWatches = (TextView) rootView.findViewById(R.id.no_watches);
             noWatches.setVisibility(TextView.GONE);
         }
+
+        FloatingActionButton addWatchButton = (FloatingActionButton) rootView.findViewById(R.id.createWatch);
+        addWatchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity a = (MainActivity)getActivity();
+                a.onNavigationDrawerItemSelected(5);
+            }
+        });
 
 		return rootView;
 	}

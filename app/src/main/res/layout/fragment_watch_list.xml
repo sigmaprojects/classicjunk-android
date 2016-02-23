@@ -24,6 +24,18 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_menu_add"
+        android:layout_alignBottom="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/createWatch"/>
+    <!-- android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha" -->
+
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

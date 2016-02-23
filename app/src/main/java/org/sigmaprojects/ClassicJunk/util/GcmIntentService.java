@@ -5,11 +5,14 @@ package org.sigmaprojects.ClassicJunk.util;
  */
 
 import android.app.IntentService;
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.media.RingtoneManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
@@ -42,6 +45,7 @@ public class GcmIntentService extends IntentService {
         //intent.setAction("OPEN_TAB_2");
         //intent.putExtra("OPEN_TAB_2",true);
 
+        Log.v("GCMDEMO", "got intent: " + intent.getAction());
         try {
             intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         } catch(Exception e) {
@@ -106,26 +110,42 @@ public class GcmIntentService extends IntentService {
     // Put the message into a notification and post it.
     // This is just one simple example of what you might choose to do with
     // a GCM message.
-    private void sendNotification(String message, String title) {
-        mNotificationManager = (NotificationManager)
-                this.getSystemService(Context.NOTIFICATION_SERVICE);
+    public void sendNotification(String message, String title) {
+
+        mNotificationManager = (NotificationManager)this.getSystemService(Context.NOTIFICATION_SERVICE);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.setAction(MainActivity.RECEIVED_NOTIFICATION);
 
         PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
 
-        NotificationCompat.Builder mBuilder =
-                new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(title)
-                        .setStyle(new NotificationCompat.BigTextStyle()
-                                .bigText(message))
-                        .setContentText(message);
-        mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
-        mBuilder.setContentIntent(contentIntent);
-        mBuilder.setAutoCancel(true);
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+
+        if (android.os.Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+            // for older API calls
+            NotificationCompat.Builder mBuilder =
+                    new NotificationCompat.Builder(this)
+                            .setSmallIcon(R.mipmap.ic_launcher)
+                            .setContentTitle(title)
+                            .setStyle(new NotificationCompat.BigTextStyle()
+                                    .bigText(message))
+                            .setContentText(message);
+            mBuilder.setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION));
+            mBuilder.setContentIntent(contentIntent);
+            mBuilder.setAutoCancel(true);
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        } else {
+            // new API calls
+            Notification.Builder mBuilder = new Notification.Builder(this)
+                    .setAutoCancel(true)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setStyle(new Notification.BigTextStyle().bigText(message))
+                    .setSmallIcon(R.mipmap.ic_notification)
+                    .setColor(Color.parseColor("#c94545"));
+            mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        }
+
+
     }
 
 
