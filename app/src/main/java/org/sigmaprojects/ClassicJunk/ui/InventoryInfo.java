@@ -82,7 +82,7 @@ public class InventoryInfo extends Activity {
 
                 Picasso.with(this)
                         .load(inventory.getImageurl() + "?h=400")
-                                //.placeholder(R.drawable.car_image_placeholder)
+                         .placeholder(R.drawable.car_image_placeholder)
                         .error(R.drawable.car_image_error)
                         .into(carImage);
             } catch (Exception e) {
