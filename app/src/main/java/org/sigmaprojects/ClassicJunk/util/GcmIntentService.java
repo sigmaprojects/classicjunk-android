@@ -142,6 +142,7 @@ public class GcmIntentService extends IntentService {
                     .setStyle(new Notification.BigTextStyle().bigText(message))
                     .setSmallIcon(R.mipmap.ic_notification)
                     .setColor(Color.parseColor("#c94545"));
+                    mBuilder.setContentIntent(contentIntent);
             mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
         }
 

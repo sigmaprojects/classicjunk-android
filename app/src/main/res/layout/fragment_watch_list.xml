@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:background="#fffffcfd"
     android:padding="10dp">
@@ -28,12 +29,20 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_menu_add"
         android:layout_alignBottom="@+id/imageView"
         android:layout_alignEnd="@+id/imageView"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:id="@+id/createWatch"/>
+        android:id="@+id/createWatch"
+
+        android:scaleType="center"
+        android:src="@mipmap/ic_add"
+        android:padding="0dp"
+        app:backgroundTint="@android:color/transparent"
+        app:borderWidth="0dp"
+        app:elevation="0dp"
+        app:fabSize="normal"
+        />
     <!-- android:src="@drawable/abc_ic_menu_paste_mtrl_am_alpha" -->
 
     <ImageView

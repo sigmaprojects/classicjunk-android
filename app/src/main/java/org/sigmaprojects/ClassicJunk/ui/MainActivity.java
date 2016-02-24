@@ -165,12 +165,12 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerF
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setTitle(mTitle);
 
+        actionBar.setBackgroundDrawable(this.getResources().getDrawable(R.drawable.orange));
         actionBar.setIcon(R.mipmap.ic_launcher);
         actionBar.setLogo(R.mipmap.ic_launcher);
         actionBar.setDisplayUseLogoEnabled(true);
         actionBar.setDisplayHomeAsUpEnabled(true);
         actionBar.setDisplayShowTitleEnabled(true);
-
     }
 
 
