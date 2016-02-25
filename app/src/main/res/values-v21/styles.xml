@@ -7,7 +7,7 @@
     </style>
 
     <style name="EditTextCustomUnderline" parent="android:Widget.EditText">
-        <item name="android:backgroundTint">#f37305</item>
+        <item name="android:backgroundTint">#b71c1c</item>
     </style>
 
 </resources>

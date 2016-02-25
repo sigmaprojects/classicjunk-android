@@ -4,12 +4,12 @@
     <style name="AppTheme" parent="Theme.AppCompat.Light">
         <!-- Customize your theme here. -->
         <item name="android:activatedBackgroundIndicator">@drawable/drawer_list_selector</item>
-        <item name="android:actionBarItemBackground">@drawable/orange</item>
+        <item name="android:actionBarItemBackground">@drawable/red</item>
         <item name="android:editTextStyle">@style/EditTextCustomUnderline</item>
     </style>
 
     <style name="EditTextCustomUnderline" parent="android:Widget.EditText">
-        <item name="android:textColorSecondary">#f37305</item>
+        <item name="android:textColorSecondary">#b71c1c</item>
     </style>
 
 </resources>
