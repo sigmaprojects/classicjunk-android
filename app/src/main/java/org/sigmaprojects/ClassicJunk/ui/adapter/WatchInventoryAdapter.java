@@ -1,6 +1,7 @@
 package org.sigmaprojects.ClassicJunk.ui.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,19 @@ public class WatchInventoryAdapter extends ArrayAdapter<WatchInventory> {
     private ArrayList<WatchInventory> watchinventories;
     private LayoutInflater mInflater;
 
-    public WatchInventoryAdapter(Context context, int textViewResourceId, ArrayList<WatchInventory> watchinventories) {
+    private int highestSeenWatchInventoryId;
+
+    public WatchInventoryAdapter(
+            Context context,
+            int textViewResourceId,
+            ArrayList<WatchInventory> watchinventories,
+            int highestSeenWatchInventoryId
+    ) {
         super(context, textViewResourceId, watchinventories);
 
         mInflater = LayoutInflater.from(context);
+
+        this.highestSeenWatchInventoryId = highestSeenWatchInventoryId;
 
         this.watchinventories = new ArrayList<WatchInventory>();
         this.watchinventories.addAll(watchinventories);
@@ -68,6 +78,9 @@ public class WatchInventoryAdapter extends ArrayAdapter<WatchInventory> {
             } catch (Exception e) {}
             try {
                 holder.arrived = (TextView) convertView.findViewById(R.id.arrived);
+                if( wi.getId() > highestSeenWatchInventoryId ) {
+                    holder.arrived.setTextColor(Color.parseColor("#4CBB17"));
+                }
             } catch (Exception e) {}
             try {
                 holder.caryear.setText(""+wi.getInventory().getCaryear());

@@ -8,8 +8,8 @@ android {
         applicationId "org.sigmaprojects.ClassicJunk"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 24
-        versionName "24"
+        versionCode 25
+        versionName "25"
     }
     buildTypes {
         debug {

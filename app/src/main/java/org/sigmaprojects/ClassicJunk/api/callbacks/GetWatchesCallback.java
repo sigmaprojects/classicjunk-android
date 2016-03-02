@@ -9,6 +9,8 @@ import org.sigmaprojects.ClassicJunk.api.interfaces.APICallComplete;
 import org.sigmaprojects.ClassicJunk.util.CJDataHolder;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +47,13 @@ public class GetWatchesCallback implements Callback<WatchResponse> {
                 //Log.v(TAG, "no watch inventory for watch_id: " + watch.getId());
             }
         }
+
+        Collections.sort(watchInventories, new Comparator<WatchInventory>() {
+            @Override
+            public int compare(WatchInventory item1, WatchInventory item2) {
+                return item2.getId().compareTo(item1.getId());
+            }
+        });
 
         cjDataHolder.setWatches(watches);
         cjDataHolder.setWatchInventories(watchInventories);

@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
@@ -33,11 +34,14 @@ public class WatchInventoryFragment extends Fragment {
 
     private final String TAG = WatchInventoryFragment.class.getName();
     private static final String ARG_SECTION_NUMBER = "section_number";
+    private final String HIGHEST_SEEN_WATCH_INVENTORY_ID = "HIGHEST_SEEN_WATCH_INVENTORY_ID";
 
     private View rootView;
     private ListView lv;
 
     private static CJDataHolder cjDataHolder;
+
+    private SharedPreferences sharedPref;
 
     private int lastClickedPosition = -1;
 
@@ -78,6 +82,8 @@ public class WatchInventoryFragment extends Fragment {
             Log.e(TAG,e.getMessage());
         }
 
+        sharedPref = getActivity().getSharedPreferences(WatchInventoryFragment.class.getName(), Context.MODE_PRIVATE);
+
         lv = (ListView) rootView.findViewById(R.id.watchInventoryListView);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -115,7 +121,15 @@ public class WatchInventoryFragment extends Fragment {
 
     private void resetAdapter() {
         lastClickedPosition = -1;
-        WatchInventoryAdapter watchinventoryAdapter = new WatchInventoryAdapter(rootView.getContext(), R.layout.watchinventory_info, cjDataHolder.getWatchInventories());
+
+        int highestWatchInventoryId = sharedPref.getInt(HIGHEST_SEEN_WATCH_INVENTORY_ID,0);
+
+        WatchInventoryAdapter watchinventoryAdapter = new WatchInventoryAdapter(
+                rootView.getContext(),
+                R.layout.watchinventory_info,
+                cjDataHolder.getWatchInventories(),
+                highestWatchInventoryId
+        );
         lv.setAdapter(watchinventoryAdapter);
         watchinventoryAdapter.notifyDataSetChanged();
 
@@ -126,6 +140,22 @@ public class WatchInventoryFragment extends Fragment {
             //noInventory.setVisibility(RelativeLayout.GONE);
             noInventory.setVisibility(TextView.GONE);
         }
+
+        updateHighestWatchInventoryId();
+    }
+
+    private void updateHighestWatchInventoryId() {
+        int highestId = 0;
+        if( cjDataHolder.hasWatchInventories() ) {
+            for (WatchInventory wi : cjDataHolder.getWatchInventories()) {
+                if( wi.getId() >= highestId ) {
+                    highestId = wi.getId();
+                }
+            }
+        }
+        SharedPreferences.Editor editor = sharedPref.edit();
+        Log.v(TAG, "Setting highest seen watch inventory id: " + highestId);
+        editor.putInt(HIGHEST_SEEN_WATCH_INVENTORY_ID,highestId).apply();
     }
 
     private void updateSort(String type) {
