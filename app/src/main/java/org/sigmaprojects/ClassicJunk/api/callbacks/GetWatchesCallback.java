@@ -33,6 +33,11 @@ public class GetWatchesCallback implements Callback<WatchResponse> {
     @Override
     public void onResponse(Call<WatchResponse> call, Response<WatchResponse> response) {
         WatchResponse b = response.body();
+
+        if( b == null ) {
+            Log.v(TAG, "b is null");
+        }
+        Log.v(TAG, "b to string: " + b.toString());
         //Log.v(TAG, "onResponse completed for getWatches" + " code: " + b.getcode() + " status: " + b.getstatus() + " errors: " + b.geterrorsarray());
 
         ArrayList<Watch> watches = b.getresults();

@@ -8,17 +8,23 @@ android {
         applicationId "org.sigmaprojects.ClassicJunk"
         minSdkVersion 19
         targetSdkVersion 22
-        versionCode 25
-        versionName "25"
+        versionCode 26
+        versionName "26"
     }
     buildTypes {
         debug {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFile 'proguard-square-retrofit2.pro'
         }
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            proguardFile 'proguard-google-play-services.pro'
+            proguardFile 'proguard-gson.pro'
+            proguardFile 'proguard-square-retrofit2.pro'
         }
     }
 }

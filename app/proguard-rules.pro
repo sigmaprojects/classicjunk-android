@@ -99,8 +99,47 @@
 
 
 # ALSO REMEMBER KEEPING YOUR MODEL CLASSES
--keep class org.sigmaprojects.ClassicJunk.api.** { *; }
+#-keep class org.sigmaprojects.ClassicJunk.api.**
+-keep class org.sigmaprojects.ClassicJunk.api.** {
+    public protected private *;
+}
+-keep class org.sigmaprojects.ClassicJunk.util.** {
+    public protected private *;
+}
+-keep class org.sigmaprojects.ClassicJunk.ui.** {
+    public protected private *;
+}
+-keep class org.sigmaprojects.ClassicJunk.** { *; }
+
 
 ## Square Picasso specific rules ##
 ## https://square.github.io/picasso/ ##
 -dontwarn com.squareup.okhttp.**
+
+# Hide warnings about references to newer platforms in the library
+-dontwarn android.support.v7.**
+# don't process support library
+-keep class android.support.v7.** { *; }
+-keep interface android.support.v7.** { *; }
+
+
+# Parcelable
+-keep class * implements android.os.Parcelable {
+    public static android.os.Parcelable$Creator *;
+}
+
+# OkHttp
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+
+
+# gson (library for Json by Google)
+-keep class com.google.gson.** { *; }
+-keep class com.google.gson.stream.** { *; }
+-keep class sun.misc.Unsafe { *; }
+-keepattributes Expose
+-keepattributes SerializedName
+-keepattributes Since
+-keepattributes Until
+-keepclasseswithmembers class * { @com.google.gson.annotations.Expose <fields>; }

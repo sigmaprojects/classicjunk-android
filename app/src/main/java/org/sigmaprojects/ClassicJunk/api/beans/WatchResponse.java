@@ -3,6 +3,9 @@ package org.sigmaprojects.ClassicJunk.api.beans;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 
 /**
@@ -10,10 +13,21 @@ import java.util.ArrayList;
  */
 public class WatchResponse implements Parcelable {
 
+    @SerializedName("code")
+    @Expose
     private Integer code;
+
+    @SerializedName("status")
+    @Expose
     private String status;
-    private ArrayList<Watch> results;
-    private ArrayList<String> errorsarray;
+
+    @SerializedName("results")
+    @Expose
+    private ArrayList<Watch> results = new ArrayList<>();
+
+    @SerializedName("errorsarray")
+    @Expose
+    private ArrayList<String> errorsarray = new ArrayList<>();
 
     public Integer getcode() {
         return code;
